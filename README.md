@@ -16,7 +16,7 @@
   
 <br>
 
-![image](https://github.com/user-attachments/assets/23db60f5-d97e-45ee-812b-185214377a71)
+![image](https://github.com/user-attachments/assets/f9cd3e90-dcaa-4ef8-a5e6-94a76a8d8c29)
 
 ## Credit
 Ninjad most from fork [dsymbol](https://github.com/dsymbol/yt-dlp-gui)
