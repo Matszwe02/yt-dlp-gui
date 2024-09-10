@@ -1,4 +1,34 @@
-# yt-dlp-gui
+# My Mods
+
+## Commands
+* Ctrl-V: When entering CTRL-V on GUI automatically sends to Queue
+* Auto: When Adding to Queue it will automatically start downloading.
+* Clipboard Monitor: Auto adds youtube links, if auto start then will auto download
+* Format 1080p: 1080p Download Best
+* MKV Remux: Added Toggle
+* Embed Subs: Added Toggle
+<br>
+
+## Other
+* Remember Filename Arguments
+* If no Ctrl-V Mode, hitting enter on link text area will add to Status Queue
+* Fixed Category Spacing in Status Queue
+  
+<br>
+
+![image](https://github.com/user-attachments/assets/23db60f5-d97e-45ee-812b-185214377a71)
+
+## Credit
+Ninjad most from fork [dsymbol](https://github.com/dsymbol/yt-dlp-gui)
+<br>
+<br>
+<br>
+<br>
+## Same install build rules cept mine is
+call pyinstaller --onefile --clean --name=yt-dlp-gui -y app.py --icon ./ui/assets/yt-dlp-gui.ico --noconsole --add-data "./config/config.json:." --exclude-module "**/*.git" --exclude-module "**/__cache__" --exclude-module "**/dist" --exclude-module "**/build"
+
+_______
+# original readme yt-dlp-gui
 Graphical interface for the command line tool [yt-dlp](https://github.com/yt-dlp/yt-dlp), which allows users to download 
 videos from various [websites](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md), including YouTube. 
 It is designed to be more user-friendly and accessible for those who are not comfortable using the command line.

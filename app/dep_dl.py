@@ -13,7 +13,7 @@ from tqdm import tqdm
 from ui.download_ui import Ui_Download
 from utils import ROOT
 
-BIN = ROOT / "bin"
+BIN = "bin"
 
 
 class DownloadWindow(QWidget, Ui_Download):
