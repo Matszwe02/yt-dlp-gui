@@ -182,7 +182,6 @@ class Worker(qtc.QThread):
                     self.progress.emit(self.item, [(STATUS, "Converting")])
                 #mkv remux fix complete size finished
                 elif line.startswith("[EmbedThumbnail"):
-
                     if ".mp4" in self.rawr:
                         self.extst = '.mp4'
                     elif ".webm" in self.rawr:
@@ -197,11 +196,9 @@ class Worker(qtc.QThread):
                         self.ext = '.webp'
                     elif ".mkv" in line:
                         self.ext = '.mkv'
-                    
                     MEOW = self.rawr.replace(self.extst, self.ext)
                     MEOW2 = os.path.getsize(MEOW)
                     MEOW3 = self.sizeof_fmt(MEOW2) or ""
-                    logger.debug(f"First ({self.ext}) Last: {self.extst} Meow: {MEOW} Meow: {MEOW3}")
                     self.progress.emit(
                         self.item,
                         [
