@@ -136,16 +136,18 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
 
     def format_change(self, fmt):
         #added 1080
-        if fmt in ("mp4", "best","1080"):
-            self.cb_subtitles.setEnabled(True)
+        if fmt in ("mp3", "flac"):
             self.cb_thumbnail.setEnabled(True)
+            self.cb_mkvremux.setEnabled(False)
+            self.cb_subtitle.setEnabled(False)
+            self.cb_autosubtitles.setEnabled(False)
+            self.cb_subtitlesembed.setEnabled(False)
         else:
-            self.cb_subtitles.setEnabled(False)
-            if fmt in ("mp3", "flac"):
-                self.cb_thumbnail.setEnabled(True)
-            else:
-                self.cb_thumbnail.setEnabled(False)
-
+            self.cb_thumbnail.setEnabled(True)
+            self.cb_mkvremux.setEnabled(True)
+            self.cb_subtitle.setEnabled(True)
+            self.cb_autosubtitles.setEnabled(True)
+            self.cb_subtitlesembed.setEnabled(True)
     def button_open(self):
         path = self.le_path.text()
         paths = os.path.normpath(path)
@@ -482,7 +484,10 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.cb_subtitlesembed.setChecked(False)
             self.cb_subtitlesembed.setEnabled(False)  
 
-        if "mkvremux" in config:
+        if "mp3" in fmt:
+            self.cb_mkvremux.setEnabled(False)
+            self.cb_mkvremux.setChecked(False)
+        elif "mkvremux" in config:
             self.cb_mkvremux.setEnabled(True)
             self.cb_mkvremux.setChecked(config["mkvremux"])
         else:

@@ -1,4 +1,10 @@
 # My Mods
+##Update
+###10-7-2024
+* Single Download Mode (1 Download Running at a time then starts next when complete.)
+* Auto Sub and Subs option.
+* Open Download Folder in Explorer.
+<br>
 
 ## Commands
 * Ctrl-V: When entering CTRL-V on GUI automatically sends to Queue
