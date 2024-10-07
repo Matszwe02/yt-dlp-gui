@@ -123,12 +123,16 @@ class Ui_MainWindow(object):
         self.cb_subtitles = QCheckBox(parent=self.gb_embeds)
         self.cb_subtitles.setObjectName("cb_subtitles")
         self.gridLayout_2.addWidget(self.cb_subtitles, 3, 3, 1, 1)
+        self.cb_autosubtitles = QCheckBox(parent=self.gb_embeds)
+        self.cb_autosubtitles.setObjectName("cb_autosubtitles")
+        self.gridLayout_2.addWidget(self.cb_autosubtitles, 3, 4, 1, 1)
         self.cb_subtitlesembed = QCheckBox(parent=self.gb_embeds)
         self.cb_subtitlesembed.setObjectName("cb_subtitlesembed")
-        self.gridLayout_2.addWidget(self.cb_subtitlesembed, 3, 4, 1, 1)
-        self.cb_mkvremux = QCheckBox(parent=self.gb_embeds)
-        self.cb_mkvremux.setObjectName("cb_mkvremux")
-        self.gridLayout_2.addWidget(self.cb_mkvremux, 3, 5, 1, 1)
+        self.gridLayout_2.addWidget(self.cb_subtitlesembed, 3, 5, 1, 1)
+
+
+
+
         #self.cb_markwatch = QCheckBox(parent=self.gb_embeds)
         #self.cb_markwatch.setObjectName("cb_markwatch")
         #self.gridLayout_2.addWidget(self.cb_markwatch, 3, 5, 1, 1)
@@ -154,12 +158,16 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.lb_path, 1, 0, 1, 1)
         self.tb_path = QToolButton(parent=self.gb_args)
         self.tb_path.setObjectName("tb_path")
-
+        self.gridLayout_4.addWidget(self.tb_path, 1, 5, 1, 1)
+        #mod
+        self.open_path = QToolButton(parent=self.gb_args)
+        self.open_path.setObjectName("tb_path")
+        self.gridLayout_4.addWidget(self.open_path, 1, 6, 1, 1)    
         self.pb_save_preset = QPushButton(self.gb_args)
         self.pb_save_preset.setObjectName(u"pb_save_preset")
         self.gridLayout_4.addWidget(self.pb_save_preset, 3, 2, 1, 1)
 
-        self.gridLayout_4.addWidget(self.tb_path, 1, 5, 1, 1)
+
         self.lb_format = QLabel(parent=self.gb_args)
         self.lb_format.setMinimumSize(QSize(0, 0))
         self.lb_format.setObjectName("lb_format")
@@ -173,6 +181,13 @@ class Ui_MainWindow(object):
         self.cb_clipboardmonitor = QCheckBox(parent=self.gb_args)
         self.cb_clipboardmonitor.setObjectName("cb_clipboardmonitor")
         self.gridLayout_4.addWidget(self.cb_clipboardmonitor, 4, 2, 1, 1)
+        self.cb_onedl = QCheckBox(parent=self.gb_args)
+        self.cb_onedl.setObjectName("cb_onedl")
+        self.gridLayout_4.addWidget(self.cb_onedl, 4, 3, 1, 1)
+        self.cb_mkvremux = QCheckBox(parent=self.gb_args)
+        self.cb_mkvremux.setObjectName("cb_mkvremux")
+        self.gridLayout_4.addWidget(self.cb_mkvremux, 4, 4, 1, 1)
+
         self.le_link = QLineEdit(parent=self.gb_args)
         self.le_link.setClearButtonEnabled(True)
         self.le_link.setObjectName("le_link")
@@ -234,8 +249,11 @@ class Ui_MainWindow(object):
         self.cb_auto.setText(_translate("MainWindow", "Auto Start"))
         self.cb_ctrlv.setText(_translate("MainWindow", "CTRL-V"))
         self.cb_clipboardmonitor.setText(_translate("MainWindow", "Clipboard Monitor"))
+        self.cb_onedl.setText(_translate("MainWindow", "Single Download Mode"))
+        
         #self.cb_embedinfo.setText(_translate("MainWindow", "Embed JSON"))
         #self.cb_markwatch.setText(_translate("MainWindow", "Mark Watched"))
+        self.cb_autosubtitles.setText(_translate("MainWindow", "Auto Subs"))
         self.cb_subtitles.setText(_translate("MainWindow", "Subtitles"))
         self.gb_args.setTitle(_translate("MainWindow", "Arguments"))
         self.dd_format.setItemText(0, _translate("MainWindow", "best"))
@@ -245,6 +263,7 @@ class Ui_MainWindow(object):
         self.dd_format.setItemText(4, _translate("MainWindow", "wav"))
         self.dd_format.setItemText(5, _translate("MainWindow", "flac"))
         self.lb_path.setText(_translate("MainWindow", "Path"))
+        self.open_path.setText(_translate("MainWindow", "Open"))
         self.tb_path.setText(_translate("MainWindow", "..."))
         self.lb_format.setText(_translate("MainWindow", "Format"))
         self.le_link.setPlaceholderText(_translate("MainWindow", "https://www.youtube.com/watch?v=dQw4w9WgXcQ"))

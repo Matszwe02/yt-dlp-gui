@@ -1,2 +1,2 @@
-__version__ = "2024.09.10"
-__subversion__ = "4"
+__version__ = "2024.10.07"
+__subversion__ = "1"

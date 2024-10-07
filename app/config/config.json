@@ -1,46 +1,44 @@
 {
-  "format": 1,
+  "format": 0,
+  "onedl": true,
+  "autostart": true,
+  "ctrlv": true,
+  "isme": false,
+  "mkvremux": false,
+  "clipboardmonitor": false,
   "presets": {
     "best": {
       "default": true,
       "args": [
         "-f",
-        "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv*+ba/b"
+        "bv*[ext=mp4]+ba/b[ext=mp4]"
       ],
       "path": "",
-      "format": 1,
       "sponsorblock": 2,
       "metadata": true,
-      "subtitles": true,
+      "subtitles": false,
+      "autosubtitles": true,
       "thumbnail": true,
       "extra_args": "",
-      "autostart": true,
-      "ctrlv": true,
       "filename": "%(title)s %(upload_date>%Y-%m-%d)s.%(ext)s",
       "embedsubs": true,
-      "mkvremux": true,
-      "clipboardmonitor": false,
       "markwatch": false
     },
     "1080": {
       "default": true,
       "args": [
         "-f",
-        "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"
+        "bv*[height<=1080][ext=mp4]+ba/b"
       ],
       "path": "",
-      "format": 1,
       "sponsorblock": 2,
       "metadata": true,
-      "subtitles": true,
+      "subtitles": false,
+      "autosubtitles": true,
       "thumbnail": true,
       "extra_args": "",
-      "autostart": true,
-      "ctrlv": true,
       "filename": "%(title)s %(upload_date>%Y-%m-%d)s.%(ext)s",
       "embedsubs": true,
-      "mkvremux": true,
-      "clipboardmonitor": false,
       "markwatch": false
     },
     "mp4": {
@@ -50,18 +48,14 @@
         "bv*[vcodec^=avc]+ba[ext=m4a]/b"
       ],
       "path": "",
-      "format": 1,
       "sponsorblock": 2,
       "metadata": true,
-      "subtitles": true,
+      "subtitles": false,
+      "autosubtitles": true,
       "thumbnail": true,
       "extra_args": "",
-      "autostart": true,
-      "ctrlv": true,
       "filename": "%(title)s %(upload_date>%Y-%m-%d)s.%(ext)s",
       "embedsubs": true,
-      "mkvremux": true,
-      "clipboardmonitor": false,
       "markwatch": false
     },
     "mp3": {
@@ -74,18 +68,14 @@
         "0"
       ],
       "path": "",
-      "format": 1,
       "sponsorblock": 2,
       "metadata": true,
-      "subtitles": true,
+      "subtitles": false,
+      "autosubtitles": true,
       "thumbnail": true,
       "extra_args": "",
-      "autostart": true,
-      "ctrlv": true,
       "filename": "%(title)s %(upload_date>%Y-%m-%d)s.%(ext)s",
       "embedsubs": true,
-      "mkvremux": true,
-      "clipboardmonitor": false,
       "markwatch": false
     }
   }

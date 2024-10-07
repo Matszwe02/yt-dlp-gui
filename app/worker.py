@@ -38,8 +38,10 @@ class Worker(qtc.QThread):
         metadata,
         thumbnail,
         subtitles,
+        autosubtitles,
         embedsubs,
         mkvremux,
+        isme,
     ):
         super().__init__()
         self.item = item
@@ -53,8 +55,10 @@ class Worker(qtc.QThread):
         self.metadata = metadata
         self.thumbnail = thumbnail
         self.subtitles = subtitles
+        self.autosubtitles = autosubtitles
         self.embedsubs = embedsubs
         self.mkvremux = mkvremux
+        self.isme = isme
         self.mutex = qtc.QMutex()
         self._stop = False
         self.rawr = "Rawr"
@@ -70,7 +74,8 @@ class Worker(qtc.QThread):
             f"metadata={self.metadata}, "
             f"thumbnail={self.thumbnail}, "
             f"embedsubs={self.subtitles}, "
-            f"mkvremux={self.embedsubs}, "
+            f"autosubtitles={self.autosubtitles}, "
+            f"embedsubs={self.embedsubs}, "
             f"subtitles={self.mkvremux})"
         )
         return s
@@ -94,28 +99,35 @@ class Worker(qtc.QThread):
             args += (
                 self.cargs if isinstance(self.cargs, list) else shlex.split(self.cargs)
             )
+        if self.autosubtitles:
+            args += ["--write-auto-sub"]
+        if self.subtitles:
+            args += ["--write-sub"]
+            args += ["--sub-lang", "en"]
+        if self.mkvremux:
+             args += ["--remux-video", "mkv"]
         if self.metadata:
             args += ["--embed-metadata"]
         if self.thumbnail:
             args += ["--embed-thumbnail"]
-        if self.subtitles:
-            args += ["--write-auto-subs"]
-        #custom config
         if self.embedsubs:
             args += ["--embed-subs"]
-        if self.mkvremux:
-            args += ["--remux-video", "mkv"]
-        #end custom config
         if self.sponsorblock:
             if self.sponsorblock == "remove":
                 args += ["--sponsorblock-remove", "all"]
             else:
                 args += ["--sponsorblock-mark", "all"]
-
+        #end custom config
         if self.path:
             args += ["-o", f"{self.path}/{self.filename}" if self.filename else self.path]
         args += ["--", self.link]
         return args
+    def sizeof_fmt(self, num, suffix="B"):
+        for unit in ("", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"):
+            if abs(num) < 1024.0:
+                return f"{num:3.1f}{unit}{suffix}"
+            num /= 1024.0
+        return f"{num:.1f}Yi{suffix}"
     def stop(self):
         with qtc.QMutexLocker(self.mutex):
             self._stop = True
@@ -137,6 +149,7 @@ class Worker(qtc.QThread):
         ) as p:
             for line in p.stdout:
                 output.append(line)
+                #logger.info(f"Info ({line})")
                 with qtc.QMutexLocker(self.mutex):
                     if self._stop:
                         p.terminate()
@@ -166,25 +179,27 @@ class Worker(qtc.QThread):
                 elif line.startswith(("[Merger]", "[ExtractAudio]")):
                     self.progress.emit(self.item, [(STATUS, "Converting")])
                 #mkv remux fix complete size finished
-                elif line.startswith("[Embed"):
-                    if self.mkvremux and self.embedsubs:
-                        def sizeof_fmt(num, suffix="B"):
-                            for unit in ("", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"):
-                                if abs(num) < 1024.0:
-                                    return f"{num:3.1f}{unit}{suffix}"
-                                num /= 1024.0
-                            return f"{num:.1f}Yi{suffix}"
-                        MEOW3 = ''
-                        MEOW = self.rawr.replace('.mp4','.mkv')
-                        MEOW2 = os.path.getsize(MEOW)
-                        MEOW3 = sizeof_fmt(MEOW2)
-
-                        self.progress.emit(
-                            self.item,
-                            [
-                                (SIZE,MEOW3),
-                            ],
-                        )
+                elif line.startswith("[EmbedThumbnail"):
+                    if ".mp4" in self.rawr:
+                        self.extst = '.mp4'
+                    elif ".webm" in self.rawr:
+                        self.extst = '.webm'
+                    if ".mp4" in line:
+                        self.ext = '.mp4'
+                    elif ".webm" in line:
+                        self.ext = '.webm'
+                    elif ".mkv" in line:
+                        self.ext = '.mkv'
+                    MEOW = self.rawr.replace(self.extst,self.ext)
+                    MEOW2 = os.path.getsize(MEOW)
+                    MEOW3 = self.sizeof_fmt(MEOW2) or ""
+                    self.progress.emit(
+                        self.item,
+                        [
+                            (TITLE,MEOW),
+                            (SIZE,MEOW3),
+                        ],
+                    )          
         if p.returncode != 0:
             logger.error(f"Download ({self.item.id}) returncode: {p.returncode}")
             self.progress.emit(
