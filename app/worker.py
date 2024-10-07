@@ -62,6 +62,8 @@ class Worker(qtc.QThread):
         self.mutex = qtc.QMutex()
         self._stop = False
         self.rawr = "Rawr"
+        self.extst = '.mp4'
+        self.ext = '.mkv'
     def __str__(self):
         s = (
             f"(link={self.link}, "
@@ -180,19 +182,26 @@ class Worker(qtc.QThread):
                     self.progress.emit(self.item, [(STATUS, "Converting")])
                 #mkv remux fix complete size finished
                 elif line.startswith("[EmbedThumbnail"):
+
                     if ".mp4" in self.rawr:
                         self.extst = '.mp4'
                     elif ".webm" in self.rawr:
                         self.extst = '.webm'
+                    elif ".webp" in self.rawr:
+                        self.extst = '.webp'
                     if ".mp4" in line:
                         self.ext = '.mp4'
                     elif ".webm" in line:
                         self.ext = '.webm'
+                    elif ".webp" in line:
+                        self.ext = '.webp'
                     elif ".mkv" in line:
                         self.ext = '.mkv'
-                    MEOW = self.rawr.replace(self.extst,self.ext)
+                    
+                    MEOW = self.rawr.replace(self.extst, self.ext)
                     MEOW2 = os.path.getsize(MEOW)
                     MEOW3 = self.sizeof_fmt(MEOW2) or ""
+                    logger.debug(f"First ({self.ext}) Last: {self.extst} Meow: {MEOW} Meow: {MEOW3}")
                     self.progress.emit(
                         self.item,
                         [
