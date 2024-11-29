@@ -144,9 +144,9 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.cb_subtitlesembed.setEnabled(False)
         else:
             self.cb_thumbnail.setEnabled(True)
-            self.cb_mkvremux.setEnabled(True)
-            self.cb_subtitle.setEnabled(True)
-            self.cb_autosubtitles.setEnabled(True)
+            self.cb_mkvremux.setEnabled(False)
+            self.cb_subtitle.setEnabled(False)
+            self.cb_autosubtitles.setEnabled(False)
             self.cb_subtitlesembed.setEnabled(True)
     def button_open(self):
         path = self.le_path.text()

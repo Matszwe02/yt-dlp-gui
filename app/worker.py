@@ -101,8 +101,10 @@ class Worker(qtc.QThread):
             args += (
                 self.cargs if isinstance(self.cargs, list) else shlex.split(self.cargs)
             )
+
         if self.autosubtitles:
             args += ["--write-auto-sub"]
+            args += ["--convert-subs", "srt"]
         if self.subtitles:
             args += ["--write-sub"]
             args += ["--sub-lang", "en"]
