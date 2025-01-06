@@ -4,9 +4,6 @@ import shlex
 import subprocess as sp
 import sys
 import os
-import time
-from concurrent.futures import ThreadPoolExecutor
-import requests
 
 import PySide6.QtCore as qtc
 
