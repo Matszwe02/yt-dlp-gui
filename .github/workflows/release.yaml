@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'app/version.py'
+  workflow_dispatch:
 
 permissions:
   contents: write
