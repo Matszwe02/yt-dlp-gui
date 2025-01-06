@@ -1,8 +1,8 @@
 """
 I modded a lot. I believe I added # to all mods.
 """
-import logging, threading, os, sys, shutil, time, subprocess, requests, version
-import win32event, win32api, concurrent.futures
+import logging, os, sys, shutil, subprocess, version
+import win32event, win32api
 import pywinctl as gw
 import re
 
