@@ -221,7 +221,7 @@
        <item row="2" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>SponserBlock</string>
+          <string>SponsorBlock</string>
          </property>
         </widget>
        </item>

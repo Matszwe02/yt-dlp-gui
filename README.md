@@ -1,6 +1,11 @@
 # My Mods
-##Update
-###10-7-2024
+## Update
+
+### 01-06-2025
+* Open folder selection dialog when not selected.
+* Fix issues with yt-dlp not being visible in PATH.
+
+### 10-7-2024
 * Single Download Mode (1 Download Running at a time then starts next when complete.)
 * Auto Sub and Subs option.
 * Open Download Folder in Explorer.

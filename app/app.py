@@ -4,6 +4,7 @@ I modded a lot. I believe I added # to all mods.
 import logging, threading, os, sys, shutil, time, subprocess, requests, version
 import win32event, win32api, concurrent.futures
 import pywinctl as gw
+import re
 
 from winerror import ERROR_ALREADY_EXISTS
 from utils import *
@@ -74,6 +75,11 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         #self.tray_ico = QPixmap(self.icon_folder+"\yt-dlp-gui.ico")
         #self.setup_tray()
         """
+    
+    
+    def valid_link(self, link):
+        pattern = r'(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?'
+        return bool(re.match(pattern, link, re.IGNORECASE))
 
     #Clipboard check
     def setup_timer(self):
@@ -87,7 +93,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.current_link = self.clipboard.text()
         if self.current_link == self.old_link:
             return
-        if "https://www.youtube.com/watch" in self.current_link:
+        if self.valid_link(self.current_link):
             logger.info(f"Copy Link `{self.current_link}`")
             self.le_link.paste()
             self.button_add()
@@ -126,6 +132,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
 
         if path:
             self.le_path.setText(path)
+        return path
 
     def clip_change(self):
         self.old_link = self.clipboard.text()
@@ -163,8 +170,10 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         #end auto paste
         link = self.le_link.text()
         path = self.le_path.text()
+        if not path and self.preset.get("default") is True:
+            path = self.button_path()
         filename = self.le_filename.text()
-        if not "youtube" in link and not "youtu.be" in link:
+        if not self.valid_link(link):
            return logger.info(f"Item {link} youtube not found")
         if "&list" in link:
             ret = qtw.QMessageBox.question(
@@ -330,6 +339,8 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             base_path = sys._MEIPASS
         except AttributeError:
             base_path = os.path.abspath("./config")
+            if 'app' not in base_path:
+                base_path = os.path.abspath("./app/config")
         return base_path
     #End onefile
     def load_config(self):

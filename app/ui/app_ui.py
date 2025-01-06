@@ -242,7 +242,7 @@ class Ui_MainWindow(object):
         self.lb_filename.setText(_translate("MainWindow", "Filename"))
         self.lb_cargs.setText(_translate("MainWindow", "Custom Args"))
         self.cb_metadata.setText(_translate("MainWindow", "Metadata"))
-        self.label.setText(_translate("MainWindow", "SponserBlock"))
+        self.label.setText(_translate("MainWindow", "SponsorBlock"))
         self.cb_thumbnail.setText(_translate("MainWindow", "Thumbnail"))
         self.cb_subtitlesembed.setText(_translate("MainWindow", "Embed Subs"))
         self.cb_mkvremux.setText(_translate("MainWindow", "MKV Remux"))

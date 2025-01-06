@@ -14,6 +14,7 @@ from ui.download_ui import Ui_Download
 from utils import ROOT
 
 BIN = "bin"
+os.environ['PATH'] = os.pathsep.join([os.path.join(os.getcwd(), BIN), os.environ['PATH']])
 
 
 class DownloadWindow(QWidget, Ui_Download):
