@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>996</width>
+    <width>1040</width>
     <height>597</height>
    </rect>
   </property>
@@ -14,7 +14,7 @@
    <string>yt-dlp-gui</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../Desktop/WSBfiles/ui/assets/icons.qrc">
+   <iconset>
     <normaloff>:/icon/yt-dlp-gui.ico</normaloff>:/icon/yt-dlp-gui.ico</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -308,13 +308,10 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2" colspan="8">
-        <widget class="QLineEdit" name="le_filename">
-         <property name="placeholderText">
-          <string>%(title)s.%(ext)s</string>
-         </property>
-         <property name="clearButtonEnabled">
-          <bool>true</bool>
+       <item row="3" column="3">
+        <widget class="QCheckBox" name="cb_subtitles">
+         <property name="text">
+          <string>Subtitles</string>
          </property>
         </widget>
        </item>
@@ -332,50 +329,13 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
-        <widget class="QComboBox" name="dd_sponsorblock">
-         <item>
-          <property name="text">
-           <string/>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>remove</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>mark</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="3" column="3">
-        <widget class="QCheckBox" name="cb_subtitles">
-         <property name="text">
-          <string>Subtitles</string>
+       <item row="0" column="2" colspan="8">
+        <widget class="QLineEdit" name="le_filename">
+         <property name="placeholderText">
+          <string>%(title)s.%(ext)s</string>
          </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>SponsorBlock</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2" colspan="8">
-        <widget class="QLineEdit" name="le_cargs">
          <property name="clearButtonEnabled">
           <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="lb_cargs">
-         <property name="text">
-          <string>Custom Args</string>
          </property>
         </widget>
        </item>
@@ -393,64 +353,145 @@
          </property>
         </widget>
        </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lb_cargs">
+         <property name="text">
+          <string>Custom Args</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>SponsorBlock</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2" colspan="8">
+        <widget class="QLineEdit" name="le_cargs">
+         <property name="clearButtonEnabled">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <layout class="QVBoxLayout" name="vl_sponsorblock">
+         <item>
+          <widget class="QRadioButton" name="rb_sb_off">
+           <property name="text">
+            <string>off</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rb_sb_mark">
+           <property name="text">
+            <string>mark</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rb_sb_rm">
+           <property name="text">
+            <string>remove</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item row="2" column="3" colspan="2">
-        <widget class="QComboBox" name="dd_sb_categories">
+        <widget class="QListWidget" name="lw_sponsorblock">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>80</height>
+          </size>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
          <item>
           <property name="text">
            <string>All</string>
           </property>
-          <property name="icon">
-           <iconset resource="../../Desktop/WSBfiles/ui/assets/icons.qrc">
-            <normaloff>:/buttons/add.png</normaloff>:/buttons/add.png</iconset>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>None</string>
-          </property>
-          <property name="icon">
-           <iconset resource="../../Desktop/WSBfiles/ui/assets/icons.qrc">
-            <normaloff>:/buttons/clear.png</normaloff>:/buttons/clear.png</iconset>
+          <property name="checkState">
+           <enum>PartiallyChecked</enum>
           </property>
          </item>
          <item>
           <property name="text">
            <string>Sponsor</string>
           </property>
+          <property name="checkState">
+           <enum>Checked</enum>
+          </property>
          </item>
          <item>
           <property name="text">
            <string>Interaction</string>
+          </property>
+          <property name="checkState">
+           <enum>Unchecked</enum>
           </property>
          </item>
          <item>
           <property name="text">
            <string>Self Promo</string>
           </property>
+          <property name="checkState">
+           <enum>Unchecked</enum>
+          </property>
          </item>
          <item>
           <property name="text">
            <string>Intro</string>
+          </property>
+          <property name="checkState">
+           <enum>Unchecked</enum>
           </property>
          </item>
          <item>
           <property name="text">
            <string>Endcards</string>
           </property>
+          <property name="checkState">
+           <enum>Unchecked</enum>
+          </property>
          </item>
          <item>
           <property name="text">
            <string>Preview</string>
+          </property>
+          <property name="checkState">
+           <enum>Unchecked</enum>
           </property>
          </item>
          <item>
           <property name="text">
            <string>Filler</string>
           </property>
+          <property name="checkState">
+           <enum>Unchecked</enum>
+          </property>
          </item>
          <item>
           <property name="text">
            <string>Non-Music</string>
+          </property>
+          <property name="checkState">
+           <enum>Checked</enum>
           </property>
          </item>
         </widget>
@@ -484,7 +525,7 @@
             <string>Add to queue</string>
            </property>
            <property name="icon">
-            <iconset resource="../../Desktop/WSBfiles/ui/assets/icons.qrc">
+            <iconset>
              <normaloff>:/buttons/add.png</normaloff>:/buttons/add.png</iconset>
            </property>
            <property name="iconSize">
@@ -507,7 +548,7 @@
             <string>Download queue</string>
            </property>
            <property name="icon">
-            <iconset resource="../../Desktop/WSBfiles/ui/assets/icons.qrc">
+            <iconset>
              <normaloff>:/buttons/download.png</normaloff>:/buttons/download.png</iconset>
            </property>
            <property name="iconSize">
@@ -530,7 +571,7 @@
             <string>Clear queue</string>
            </property>
            <property name="icon">
-            <iconset resource="../../Desktop/WSBfiles/ui/assets/icons.qrc">
+            <iconset>
              <normaloff>:/buttons/clear.png</normaloff>:/buttons/clear.png</iconset>
            </property>
            <property name="iconSize">
@@ -555,7 +596,7 @@
   <tabstop>tw</tabstop>
  </tabstops>
  <resources>
-  <include location="../../Desktop/WSBfiles/ui/assets/icons.qrc"/>
+  <include location="ui/assets/icons.qrc"/>
  </resources>
  <connections/>
 </ui>

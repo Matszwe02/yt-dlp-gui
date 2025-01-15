@@ -47,6 +47,12 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.le_link.setFocus()
         #end Select input for ctrl v
 
+        self.rb_sb_off.clicked.connect(self.update_sponsorblock_options)
+        self.rb_sb_mark.clicked.connect(self.update_sponsorblock_options)
+        self.rb_sb_rm.clicked.connect(self.update_sponsorblock_options)
+        self.lw_sponsorblock.itemChanged.connect(self.handle_sponsorblock_item_change)
+        self.update_sponsorblock_options()
+
         self.statusBar.showMessage(f"Version {version.__version__} -- {version.__subversion__} ")
         self.form = DownloadWindow()
         self.form.finished.connect(self.form.close)
@@ -278,6 +284,33 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.downloading = False
             pass
 
+    def update_sponsorblock_options(self):
+        enabled = not self.rb_sb_off.isChecked()
+        self.lw_sponsorblock.setEnabled(enabled)
+
+
+    def handle_sponsorblock_item_change(self, item=None):
+        if item is None or item != self.lw_sponsorblock.item(0):
+            all_item = self.lw_sponsorblock.item(0)
+            checked_count = sum(self.lw_sponsorblock.item(i).checkState() == qtc.Qt.CheckState.Checked for i in range(1, self.lw_sponsorblock.count()))
+            
+            if checked_count == self.lw_sponsorblock.count() - 1:
+                all_item.setCheckState(qtc.Qt.CheckState.Checked)
+            elif checked_count == 0:
+                all_item.setCheckState(qtc.Qt.CheckState.Unchecked)
+            else:
+                all_item.setCheckState(qtc.Qt.CheckState.PartiallyChecked)
+        else:
+            # The "All" item was clicked
+            all_item = self.lw_sponsorblock.item(0)
+            if all_item.checkState() == qtc.Qt.CheckState.Checked:
+                for i in range(1, self.lw_sponsorblock.count()):
+                    self.lw_sponsorblock.item(i).setCheckState(qtc.Qt.CheckState.Checked)
+            elif all_item.checkState() == qtc.Qt.CheckState.Unchecked:
+                for i in range(1, self.lw_sponsorblock.count()):
+                    self.lw_sponsorblock.item(i).setCheckState(qtc.Qt.CheckState.Unchecked)
+
+
     def button_download(self):
         if self.cb_onedl.isChecked():
             for k, v in self.to_dl.items():
@@ -376,8 +409,20 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
     def save_preset(self):
         if "path" in self.preset:
             self.preset["path"] = self.le_path.text()
-        if "sponsorblock" in self.preset:
-            self.preset["sponsorblock"] = self.dd_sponsorblock.currentIndex()
+            
+        if self.rb_sb_off.isChecked():
+            self.preset["sponsorblock"] = "off"
+        elif self.rb_sb_mark.isChecked():
+            self.preset["sponsorblock"] = "mark"
+        elif self.rb_sb_rm.isChecked():
+            self.preset["sponsorblock"] = "remove"
+            
+        sponsorblock_categories = []
+        for i in range(1, self.lw_sponsorblock.count()):
+            if self.lw_sponsorblock.item(i).checkState() == qtc.Qt.CheckState.Checked:
+                sponsorblock_categories.append(self.lw_sponsorblock.item(i).text())
+        self.preset["sponsorblock_categories"] = sponsorblock_categories
+
         if "metadata" in self.preset:
             self.preset["metadata"] = self.cb_metadata.isChecked()
         if "thumbnail" in self.preset:
@@ -404,8 +449,6 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         if not (preset := self.config["presets"].get(fmt)):
             self.le_path.clear()
             self.tb_path.setEnabled(False)
-            self.dd_sponsorblock.setCurrentIndex(-1)
-            self.dd_sponsorblock.setEnabled(False)
             self.cb_metadata.setChecked(False)
             self.cb_metadata.setEnabled(False)
             self.cb_thumbnail.setChecked(False)
@@ -454,11 +497,24 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.tb_path.setEnabled(False)
 
         if "sponsorblock" in preset:
-            self.dd_sponsorblock.setEnabled(True)
-            self.dd_sponsorblock.setCurrentIndex(preset["sponsorblock"])
+            if preset["sponsorblock"] == "off":
+                self.rb_sb_off.setChecked(True)
+            elif preset["sponsorblock"] == "mark":
+                self.rb_sb_mark.setChecked(True)
+            elif preset["sponsorblock"] == "remove":
+                self.rb_sb_rm.setChecked(True)
+            
+            self.update_sponsorblock_options()
+
+            # Load sponsorblock categories
+            if "sponsorblock_categories" in preset:
+                for i in range(1, self.lw_sponsorblock.count()):
+                    item = self.lw_sponsorblock.item(i)
+                    item.setCheckState(qtc.Qt.CheckState.Checked if item.text() in preset["sponsorblock_categories"] else qtc.Qt.CheckState.Unchecked)
+                self.handle_sponsorblock_item_change()
         else:
-            self.dd_sponsorblock.setCurrentIndex(-1)
-            self.dd_sponsorblock.setEnabled(False)
+            self.rb_sb_off.setChecked(True)
+            self.update_sponsorblock_options()
 
         if "metadata" in preset:
             self.cb_metadata.setEnabled(True)
