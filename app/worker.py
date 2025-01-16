@@ -18,6 +18,17 @@ SPEED = 5
 ETA = 6
 
 
+sb_categories = {
+    "Sponsor" : 'sponsor',
+    "Interaction" : 'interaction',
+    "Self Promo" : 'selfpromo',
+    "Intro" : 'intro',
+    "Endcards" : 'outro',
+    "Preview" : 'preview',
+    "Filler" : 'filler',
+    "Non-Music" : 'music_offtopic',
+}
+
 class Worker(qtc.QThread):
     finished = qtc.Signal(int)
     progress = qtc.Signal(object, list)
@@ -32,13 +43,13 @@ class Worker(qtc.QThread):
         fmt,
         cargs,
         sponsorblock,
+        sb_categories,
         metadata,
         thumbnail,
         subtitles,
         autosubtitles,
         embedsubs,
         mkvremux,
-        isme,
     ):
         super().__init__()
         self.item = item
@@ -49,13 +60,13 @@ class Worker(qtc.QThread):
         self.fmt = fmt
         self.cargs = cargs
         self.sponsorblock = sponsorblock
+        self.sb_categories = sb_categories
         self.metadata = metadata
         self.thumbnail = thumbnail
         self.subtitles = subtitles
         self.autosubtitles = autosubtitles
         self.embedsubs = embedsubs
         self.mkvremux = mkvremux
-        self.isme = isme
         self.mutex = qtc.QMutex()
         self._stop = False
         self.rawr = "Rawr"
@@ -70,6 +81,7 @@ class Worker(qtc.QThread):
             f"format={self.fmt}, "
             f"cargs={self.cargs}, "
             f"sponsorblock={self.sponsorblock}, "
+            f"sb_categories={','.join(self.sb_categories)}, "
             f"metadata={self.metadata}, "
             f"thumbnail={self.thumbnail}, "
             f"embedsubs={self.subtitles}, "
@@ -114,10 +126,12 @@ class Worker(qtc.QThread):
         if self.embedsubs:
             args += ["--embed-subs"]
         if self.sponsorblock:
+            categories = "all" if 'all' in self.sb_categories else ",".join(sb_categories.get(cat, 'all') for cat in self.sb_categories)
             if self.sponsorblock == "remove":
-                args += ["--sponsorblock-remove", "all"]
+                args += ["--sponsorblock-remove", categories]
             else:
-                args += ["--sponsorblock-mark", "all"]
+                args += ["--sponsorblock-mark", categories]
+
         #end custom config
         if self.path:
             args += ["-o", f"{self.path}/{self.filename}" if self.filename else self.path]

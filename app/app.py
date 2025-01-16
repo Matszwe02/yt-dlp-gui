@@ -152,13 +152,13 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         if fmt in ("mp3", "flac"):
             self.cb_thumbnail.setEnabled(True)
             self.cb_mkvremux.setEnabled(False)
-            self.cb_subtitle.setEnabled(False)
+            self.cb_subtitles.setEnabled(False)
             self.cb_autosubtitles.setEnabled(False)
             self.cb_subtitlesembed.setEnabled(False)
         else:
             self.cb_thumbnail.setEnabled(True)
             self.cb_mkvremux.setEnabled(False)
-            self.cb_subtitle.setEnabled(False)
+            self.cb_subtitles.setEnabled(False)
             self.cb_autosubtitles.setEnabled(False)
             self.cb_subtitlesembed.setEnabled(True)
     def button_open(self):
@@ -214,6 +214,17 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         [item.setTextAlignment(i, qtc.Qt.AlignCenter) for i in range(1, 6)]
         item.id = self.index
         self.le_link.clear()
+        
+        sponsorblock = None
+        if self.rb_sb_mark.isChecked(): sponsorblock = 'mark'
+        if self.rb_sb_rm.isChecked(): sponsorblock = 'remove'
+        sponsorblock_categories = []
+        for i in range(1, self.lw_sponsorblock.count()):
+            if self.lw_sponsorblock.item(i).checkState() == qtc.Qt.CheckState.Checked:
+                sponsorblock_categories.append(self.lw_sponsorblock.item(i).text())
+        
+        print(sponsorblock)
+        print(sponsorblock_categories)
 
         self.to_dl[self.index] = Worker(
             item,
@@ -223,14 +234,14 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             filename,
             self.fmt,
             self.le_cargs.text(),
-            self.dd_sponsorblock.currentText(),
+            sponsorblock,
+            sponsorblock_categories,
             self.cb_metadata.isChecked(),
             self.cb_thumbnail.isChecked(),
             self.cb_subtitles.isChecked(),
             self.cb_autosubtitles.isChecked(),
             self.cb_subtitlesembed.isChecked(),
             self.cb_mkvremux.isChecked(),
-            self.isme,
         )
 
         logger.info(f"Queue download ({item.id}) added: {self.to_dl[self.index]}")
@@ -596,9 +607,6 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         else:
             self.cb_clipboardmonitor.setChecked(False)
             self.cb_clipboardmonitor.setEnabled(False)
-
-        if "isme" in config:
-            self.isme = config["isme"]
 
         if "onedl" in config:
             self.cb_onedl.setEnabled(True)
