@@ -110,7 +110,7 @@ class _D_Worker(QThread):
             self.filename = os.path.basename(self.url)
         r = requests.get(self.url, stream=True)
         file_size = int(r.headers.get("content-length", 0))
-        scaling_factor = 100 / file_size
+        scaling_factor = 100 / file_size if file_size > 0 else 0
         data = StringIO()
         chunk_size = 1024
         read_bytes = 0
