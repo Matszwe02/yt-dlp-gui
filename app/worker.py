@@ -4,6 +4,7 @@ import shlex
 import subprocess as sp
 import sys
 import os
+import time
 
 import PySide6.QtCore as qtc
 
@@ -143,83 +144,92 @@ class Worker(qtc.QThread):
                 return f"{num:3.1f}{unit}{suffix}"
             num /= 1024.0
         return f"{num:.1f}Yi{suffix}"
+    
     def stop(self):
         with qtc.QMutexLocker(self.mutex):
             self._stop = True
+    
+    def restart(self):
+        # self.stop()
+        self._stop = False
+        # self.run()
+    
     def run(self):
-        create_window = sp.CREATE_NO_WINDOW if sys.platform == "win32" else 0
-        command = self.build_command()
-        output = []
-        logger.info(
-            f"Download ({self.item.id}) starting with cmd: " + shlex.join(command)
-        )
+        while True:
+            create_window = sp.CREATE_NO_WINDOW if sys.platform == "win32" else 0
+            command = self.build_command()
+            output = []
+            logger.info(
+                f"Download ({self.item.id}) starting with cmd: " + shlex.join(command)
+            )
 
-        with sp.Popen(
-            command,
-            stdout=sp.PIPE,
-            stderr=sp.STDOUT,
-            text=True,
-            universal_newlines=True,
-            creationflags=create_window,
-        ) as p:
-            for line in p.stdout:
-                output.append(line)
-                #logger.info(f"Info ({line})")
-                with qtc.QMutexLocker(self.mutex):
-                    if self._stop:
-                        p.terminate()
-                        break
-                if line.startswith("{"):
-                    title = json.loads(line)["title"]
+            with sp.Popen(
+                command,
+                stdout=sp.PIPE,
+                stderr=sp.STDOUT,
+                text=True,
+                universal_newlines=True,
+                creationflags=create_window,
+            ) as p:
+                for line in p.stdout:
+                    output.append(line)
+                    #logger.info(f"Info ({line})")
+                    with qtc.QMutexLocker(self.mutex):
+                        if self._stop:
+                            p.terminate()
+                            break
+                    if line.startswith("{"):
+                        title = json.loads(line)["title"]
+                        #mkv remux fix complete size finished
+                        self.rawr  = json.loads(line)["filename"]
+                        #end mkv remux fix complete size finished
+                        logger.debug(f"Download ({self.item.id}) title: {title}")
+                        self.progress.emit(
+                            self.item,
+                            [(TITLE, title), (STATUS, "Processing")],
+                        )
+                    elif line.lower().startswith("downloading"):
+                        data = line.split()
+                        self.progress.emit(
+                            self.item,
+                            [
+                                (SIZE, data[1]),
+                                (PROGRESS, data[2]),
+                                (SPEED, data[3]),
+                                (ETA, data[4]),
+                                (STATUS, "Downloading"),
+                            ],
+                        )
+                    elif line.startswith(("[Merger]", "[ExtractAudio]")):
+                        self.progress.emit(self.item, [(STATUS, "Converting")])
                     #mkv remux fix complete size finished
-                    self.rawr  = json.loads(line)["filename"]
-                    #end mkv remux fix complete size finished
-                    logger.debug(f"Download ({self.item.id}) title: {title}")
-                    self.progress.emit(
-                        self.item,
-                        [(TITLE, title), (STATUS, "Processing")],
-                    )
-                elif line.lower().startswith("downloading"):
-                    data = line.split()
-                    self.progress.emit(
-                        self.item,
-                        [
-                            (SIZE, data[1]),
-                            (PROGRESS, data[2]),
-                            (SPEED, data[3]),
-                            (ETA, data[4]),
-                            (STATUS, "Downloading"),
-                        ],
-                    )
-                elif line.startswith(("[Merger]", "[ExtractAudio]")):
-                    self.progress.emit(self.item, [(STATUS, "Converting")])
-                #mkv remux fix complete size finished
-                elif line.startswith("[EmbedThumbnail"):
-                    if ".mp4" in self.rawr:
-                        self.extst = '.mp4'
-                    elif ".webm" in self.rawr:
-                        self.extst = '.webm'
-                    elif ".webp" in self.rawr:
-                        self.extst = '.webp'
-                    if ".mp4" in line:
-                        self.ext = '.mp4'
-                    elif ".webm" in line:
-                        self.ext = '.webm'
-                    elif ".webp" in line:
-                        self.ext = '.webp'
-                    elif ".mkv" in line:
-                        self.ext = '.mkv'
-                    MEOW = self.rawr.replace(self.extst, self.ext)
-                    MEOW2 = os.path.getsize(MEOW)
-                    MEOW3 = self.sizeof_fmt(MEOW2) or ""
-                    self.progress.emit(
-                        self.item,
-                        [
-                            (TITLE,MEOW),
-                            (SIZE,MEOW3),
-                        ],
-                    )          
-        if p.returncode != 0:
+                    elif line.startswith("[EmbedThumbnail"):
+                        if ".mp4" in self.rawr:
+                            self.extst = '.mp4'
+                        elif ".webm" in self.rawr:
+                            self.extst = '.webm'
+                        elif ".webp" in self.rawr:
+                            self.extst = '.webp'
+                        if ".mp4" in line:
+                            self.ext = '.mp4'
+                        elif ".webm" in line:
+                            self.ext = '.webm'
+                        elif ".webp" in line:
+                            self.ext = '.webp'
+                        elif ".mkv" in line:
+                            self.ext = '.mkv'
+                        MEOW = self.rawr.replace(self.extst, self.ext)
+                        MEOW2 = os.path.getsize(MEOW)
+                        MEOW3 = self.sizeof_fmt(MEOW2) or ""
+                        self.progress.emit(
+                            self.item,
+                            [
+                                (TITLE,MEOW),
+                                (SIZE,MEOW3),
+                            ],
+                        )          
+            if p.returncode == 0: break
+            
             logger.error(f"Download ({self.item.id}) returncode: {p.returncode}")
             self.progress.emit(
                 self.item,
@@ -229,12 +239,15 @@ class Worker(qtc.QThread):
                     (SPEED, "ERROR"),
                 ],
             )
-        else:
-            self.progress.emit(
-                self.item,
-                [
-                    (PROGRESS, "100%"),
-                    (STATUS, "Finished"),
-                ],
-            )
+            self._stop = True
+            while self._stop == True:
+                time.sleep(1)
+            
+        self.progress.emit(
+            self.item,
+            [
+                (PROGRESS, "100%"),
+                (STATUS, "Finished"),
+            ],
+        )
         self.finished.emit(self.item.id)

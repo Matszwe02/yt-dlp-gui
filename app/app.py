@@ -106,23 +106,43 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.old_link = self.current_link
 
     def remove_item(self, item, column):
-        ret = qtw.QMessageBox.question(
-            self,
-            "Application Message",
-            f"Would you like to remove {item.text(0)} ?",
-            qtw.QMessageBox.Yes | qtw.QMessageBox.No,
-            qtw.QMessageBox.No,
-        )
-        if ret == qtw.QMessageBox.Yes:
+        is_error = item.text(4) == 'ERROR'
+        action = None
+        
+        if is_error:
+            msg_box = qtw.QMessageBox(self)
+            msg_box.setText(f"Would you like to remove {item.text(0)} ?")
+            msg_box.setWindowTitle("Application Message")
+            msg_box.setStandardButtons(qtw.QMessageBox.Yes | qtw.QMessageBox.No)
+            msg_box.addButton("Restart", qtw.QMessageBox.ActionRole)
+            ret = msg_box.exec_()
+            if ret == qtw.QMessageBox.Yes: action = 'remove'
+            if ret == 2: action = 'restart'
+        
+        else:
+            ret = qtw.QMessageBox.question(
+                self,
+                "Application Message",
+                f"Would you like to remove {item.text(0)} ?",
+                qtw.QMessageBox.Yes | qtw.QMessageBox.No,
+                qtw.QMessageBox.No,
+            )
+            if ret == qtw.QMessageBox.Yes: action = 'remove'
+    
+        if action == 'remove':
             if self.to_dl.get(item.id):
                 logger.debug(f"Removing queued download ({item.id}): {item.text(0)}")
                 self.to_dl.pop(item.id)
+                
             elif worker := self.worker.get(item.id):
-                logger.info(
-                    f"Stopping and removing download ({item.id}): {item.text(0)}"
-                )
+                logger.info(f"Stopping and removing download ({item.id}): {item.text(0)}")
                 worker.stop()
                 self.tw.takeTopLevelItem(self.tw.indexOfTopLevelItem(item))
+                
+        if action == 'restart':
+            if worker := self.worker.get(item.id):
+                logger.info(f"Restarting item ({item.id}): {item.text(0)}")
+                worker.restart()
 
 
     def button_path(self):
