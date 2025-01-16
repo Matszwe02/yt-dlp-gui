@@ -4,6 +4,7 @@ import shutil
 import stat
 from io import StringIO
 from tempfile import NamedTemporaryFile
+from datetime import datetime, timedelta
 
 import requests
 from PySide6.QtCore import QThread, QTimer, Signal
@@ -15,6 +16,17 @@ from utils import ROOT
 
 BIN = "bin"
 os.environ['PATH'] = os.pathsep.join([os.path.join(os.getcwd(), BIN), os.environ['PATH']])
+
+
+
+def if_download_file(file_path):
+    if not os.path.exists(file_path):
+        return True
+    
+    current_date = datetime.now()
+    one_month_ago = current_date - timedelta(days=30)
+    mod_time = datetime.fromtimestamp(os.path.getmtime(file_path))
+    return mod_time < one_month_ago
 
 
 class DownloadWindow(QWidget, Ui_Download):
@@ -53,7 +65,7 @@ class DownloadWindow(QWidget, Ui_Download):
             },
         }
 
-        exes = [exe for exe in ["ffmpeg", "ffprobe", "yt-dlp"] if not shutil.which(exe)]
+        exes = [exe for exe in ["ffmpeg", "ffprobe", "yt-dlp"] if not if_download_file(exe)]
         os_ = platform.system()
 
         if exes:
