@@ -104,32 +104,26 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.le_link.paste()
             self.button_add()
         self.old_link = self.current_link
-    #endclipboard check
+
     def remove_item(self, item, column):
-        modifiers = qtw.QApplication.keyboardModifiers()      
-        if not self.isme or (self.isme and modifiers == qtc.Qt.ShiftModifier):
-            ret = qtw.QMessageBox.question(
-                self,
-                "Application Message",
-                f"Would you like to remove {item.text(0)} ?",
-                qtw.QMessageBox.Yes | qtw.QMessageBox.No,
-                qtw.QMessageBox.No,
-            )
-            if ret == qtw.QMessageBox.Yes:
-                if self.to_dl.get(item.id):
-                    logger.debug(f"Removing queued download ({item.id}): {item.text(0)}")
-                    self.to_dl.pop(item.id)
-                elif worker := self.worker.get(item.id):
-                    logger.info(
-                        f"Stopping and removing download ({item.id}): {item.text(0)}"
-                    )
-                    worker.stop()
-                    self.tw.takeTopLevelItem(self.tw.indexOfTopLevelItem(item))
-        else:
-            if "Finished" in item.text(4):
-                paths = os.path.normpath(item.text(0))
-                arg = ['W:\\Down\\Rar\\Tools\\PortablePot\\PotPlayerPortable\\PotPlayerPortable.exe', paths,'/insert']
-                subprocess.Popen(arg)
+        ret = qtw.QMessageBox.question(
+            self,
+            "Application Message",
+            f"Would you like to remove {item.text(0)} ?",
+            qtw.QMessageBox.Yes | qtw.QMessageBox.No,
+            qtw.QMessageBox.No,
+        )
+        if ret == qtw.QMessageBox.Yes:
+            if self.to_dl.get(item.id):
+                logger.debug(f"Removing queued download ({item.id}): {item.text(0)}")
+                self.to_dl.pop(item.id)
+            elif worker := self.worker.get(item.id):
+                logger.info(
+                    f"Stopping and removing download ({item.id}): {item.text(0)}"
+                )
+                worker.stop()
+                self.tw.takeTopLevelItem(self.tw.indexOfTopLevelItem(item))
+
 
     def button_path(self):
         path = qtw.QFileDialog.getExistingDirectory(
