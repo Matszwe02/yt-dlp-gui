@@ -72,16 +72,16 @@ class DownloadWindow(QWidget, Ui_Download):
     def get_missing_dep(self):
         binaries = {
             "Linux": {
-                "ffmpeg": "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl-shared.tar.xz",
-                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/yt-dlp_linux",
+                "ffmpeg": "https://github.com/BtbN/FFmpeg-Builds/releases/latest/download/ffmpeg-master-latest-linux64-gpl-shared.tar.xz",
+                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux",
             },
             "Darwin": {
                 "ffmpeg": ["https://evermeet.cx/ffmpeg/get/zip", "https://evermeet.cx/ffmpeg/getrelease/ffprobe/zip"],
-                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/yt-dlp_macos",
+                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos",
             },
             "Windows": {
-                "ffmpeg": "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl-shared.zip",
-                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/yt-dlp.exe",
+                "ffmpeg": "https://github.com/BtbN/FFmpeg-Builds/releases/latest/download/ffmpeg-master-latest-win64-gpl-shared.zip",
+                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe",
             },
         }
 
