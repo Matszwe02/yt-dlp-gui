@@ -7,6 +7,7 @@ from tempfile import NamedTemporaryFile
 from datetime import datetime, timedelta
 import tarfile
 import zipfile
+from pyunpack import Archive
 
 import requests
 from PySide6.QtCore import QThread, QTimer, Signal
@@ -83,7 +84,7 @@ class DownloadWindow(QWidget, Ui_Download):
                 "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos",
             },
             "Windows": {
-                "ffmpeg": "https://github.com/BtbN/FFmpeg-Builds/releases/latest/download/ffmpeg-master-latest-win64-gpl-shared.zip",
+                "ffmpeg": "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip",
                 "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe",
             },
         }
