@@ -22,13 +22,16 @@ os.environ['PATH'] = os.pathsep.join([os.path.join(os.getcwd(), BIN), os.environ
 
 
 def if_download_file(file_path):
-    # if not os.path.exists(file_path):
-    if not shutil.which(file_path):
+    
+    file = file_path
+    if platform.system() == 'Windows': file += '.exe'
+    
+    if not os.path.exists(os.path.join(BIN, file)):
         return True
     try:
         current_date = datetime.now()
         one_month_ago = current_date - timedelta(days=30)
-        mod_time = datetime.fromtimestamp(os.path.getmtime(file_path))
+        mod_time = datetime.fromtimestamp(os.path.getmtime(os.path.join(BIN, file)))
         return mod_time < one_month_ago
     except:
         return True
