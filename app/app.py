@@ -632,9 +632,9 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.fmt = fmt
 
 if __name__ == "__main__":
-    mutex = win32event.CreateMutex(None, False, 'yt-dlp-gui')
+    mutex = win32event.CreateMutex(None, False, 'YT-DLP GUI')
     last_error = win32api.GetLastError()
-    win = gw.getWindowsWithTitle('yt-dlp-gui')
+    win = gw.getWindowsWithTitle('YT-DLP GUI')
     if win:
         win[0].minimize()
         win[0].restore()

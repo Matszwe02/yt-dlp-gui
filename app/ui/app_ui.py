@@ -249,7 +249,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "yt-dlp-gui"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "YT-DLP GUI"))
         self.gb_args.setTitle(_translate("MainWindow", "Arguments"))
         self.cb_ctrlv.setText(_translate("MainWindow", "CTRL-V"))
         self.lb_format.setText(_translate("MainWindow", "Format"))
