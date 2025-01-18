@@ -84,7 +84,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
     
     
     def valid_link(self, link):
-        pattern = r'(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?'
+        pattern = r'https?://(?:www\.)?\S+'
         return bool(re.match(pattern, link, re.IGNORECASE))
 
     #Clipboard check
@@ -194,7 +194,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             path = self.button_path()
         filename = self.le_filename.text()
         if not self.valid_link(link):
-           return logger.info(f"Item {link} youtube not found")
+           return logger.info(f"Item {link}: URL not found")
         if "&list" in link:
             ret = qtw.QMessageBox.question(
                 self,
