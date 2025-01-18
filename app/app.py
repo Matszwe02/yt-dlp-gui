@@ -5,6 +5,7 @@ import logging, os, sys, shutil, subprocess, version
 import win32event, win32api
 import pywinctl as gw
 import re
+import tldextract
 
 from winerror import ERROR_ALREADY_EXISTS
 from utils import *
@@ -29,6 +30,9 @@ logging.basicConfig(
         logging.StreamHandler(),
     ],
 )
+
+BIN = "bin"
+
 
 class MainWindow(qtw.QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -75,6 +79,8 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.installEventFilter(self)
         self.setup_timer()
         self.downloading = False
+        
+        self.supported_sites = ''
         #end clipboard monitor & Keyboard input event
         """
         self.icon_folder = self.resources_path()
@@ -83,9 +89,23 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         """
     
     
-    def valid_link(self, link):
+    def valid_link(self, link: str):
         pattern = r'https?://(?:www\.)?\S+'
-        return bool(re.match(pattern, link, re.IGNORECASE))
+        if not re.match(pattern, link, re.IGNORECASE): return False
+            
+        if self.supported_sites == '':
+            try:
+                with open(os.path.join(BIN, 'supported-sites.txt') ,'r', encoding='utf-8') as f:
+                    self.supported_sites = f.read()
+            except: logger.debug(f'could not open supported sites file')
+        
+        if self.supported_sites == '': return True
+        
+        domain = tldextract.extract(link).domain
+        logger.debug(f'checking {domain} ...')
+        return domain.lower() in self.supported_sites
+            
+
 
     #Clipboard check
     def setup_timer(self):

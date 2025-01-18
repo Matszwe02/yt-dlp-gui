@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import tarfile
 import zipfile
 from pyunpack import Archive
+import re
 
 import requests
 from PySide6.QtCore import QThread, QTimer, Signal
@@ -77,15 +78,15 @@ class DownloadWindow(QWidget, Ui_Download):
         binaries = {
             "Linux": {
                 "ffmpeg": "https://github.com/BtbN/FFmpeg-Builds/releases/latest/download/ffmpeg-master-latest-linux64-gpl-shared.tar.xz",
-                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux",
+                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux"
             },
             "Darwin": {
                 "ffmpeg": ["https://evermeet.cx/ffmpeg/get/zip", "https://evermeet.cx/ffmpeg/getrelease/ffprobe/zip"],
-                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos",
+                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos"
             },
             "Windows": {
                 "ffmpeg": "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip",
-                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe",
+                "yt-dlp": "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
             },
         }
 
@@ -132,6 +133,13 @@ class DownloadWindow(QWidget, Ui_Download):
         else:
             st = os.stat(filename)
             os.chmod(filename, st.st_mode | stat.S_IEXEC)
+            req = requests.get('https://raw.githubusercontent.com/yt-dlp/yt-dlp/refs/heads/master/supportedsites.md')
+            
+            with open(os.path.join(BIN, 'supported-sites.txt'), 'w', encoding='utf-8') as f:
+                pattern = r'\*\*([^*]+)\*\*:.*'
+                matches = re.findall(pattern, req.text)
+                for site in matches:
+                    f.write(site.strip().lower() + '\n')
 
         if self.missing:
             self.download_init()
