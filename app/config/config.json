@@ -14,7 +14,7 @@
         "bv*[ext=mp4]+ba/b[ext=mp4]"
       ],
       "path": "",
-      "sponsorblock": 2,
+      "sponsorblock": "remove",
       "metadata": true,
       "subtitles": false,
       "autosubtitles": true,
@@ -31,7 +31,11 @@
         "bv*[height<=1080][ext=mp4]+ba/b"
       ],
       "path": "",
-      "sponsorblock": 2,
+      "sponsorblock": "remove",
+      "sponsorblock_categories": [
+        "Sponsor",
+        "Non-Music"
+      ],
       "metadata": true,
       "subtitles": false,
       "autosubtitles": true,
@@ -48,7 +52,11 @@
         "bv*[vcodec^=avc]+ba[ext=m4a]/b"
       ],
       "path": "",
-      "sponsorblock": 2,
+      "sponsorblock": "remove",
+      "sponsorblock_categories": [
+        "Sponsor",
+        "Non-Music"
+      ],
       "metadata": true,
       "subtitles": false,
       "autosubtitles": true,
@@ -68,7 +76,11 @@
         "0"
       ],
       "path": "",
-      "sponsorblock": 2,
+      "sponsorblock": "remove",
+      "sponsorblock_categories": [
+        "Sponsor",
+        "Non-Music"
+      ],
       "metadata": true,
       "subtitles": false,
       "autosubtitles": true,
