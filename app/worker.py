@@ -5,6 +5,7 @@ import subprocess as sp
 import sys
 import os
 import time
+import shutil
 
 import PySide6.QtCore as qtc
 
@@ -51,6 +52,7 @@ class Worker(qtc.QThread):
         autosubtitles,
         embedsubs,
         mkvremux,
+        compress_level,
     ):
         super().__init__()
         self.item = item
@@ -68,11 +70,13 @@ class Worker(qtc.QThread):
         self.autosubtitles = autosubtitles
         self.embedsubs = embedsubs
         self.mkvremux = mkvremux
+        self.compress_level = compress_level
         self.mutex = qtc.QMutex()
         self._stop = False
         self.rawr = "Rawr"
         self.extst = '.mp4'
         self.ext = '.mkv'
+
     def __str__(self):
         s = (
             f"(link={self.link}, "
@@ -83,6 +87,7 @@ class Worker(qtc.QThread):
             f"cargs={self.cargs}, "
             f"sponsorblock={self.sponsorblock}, "
             f"sb_categories={','.join(self.sb_categories)}, "
+            f"compress_level={self.compress_level}, "
             f"metadata={self.metadata}, "
             f"thumbnail={self.thumbnail}, "
             f"embedsubs={self.subtitles}, "
@@ -132,8 +137,7 @@ class Worker(qtc.QThread):
                 args += ["--sponsorblock-remove", categories]
             else:
                 args += ["--sponsorblock-mark", categories]
-
-        #end custom config
+        
         if self.path:
             args += ["-o", f"{self.path}/{self.filename}" if self.filename else self.path]
         args += ["--", self.link]
@@ -242,7 +246,39 @@ class Worker(qtc.QThread):
             self._stop = True
             while self._stop == True:
                 time.sleep(1)
+        
+        
             
+        if self.compress_level != "Original":
+            logger.debug('Compressing video with FFMPEG')
+            self.progress.emit(self.item, [(STATUS, "Compressing")])
+            crf = 30
+            if self.compress_level == "Low quality":
+                crf = 40
+            elif self.compress_level == "Medium quality":
+                crf = 35
+            elif self.compress_level == "High quality":
+                crf = 30
+            
+            # try firstly with NVENC
+            args = shlex.split(f'ffmpeg -hwaccel cuda -hwaccel_output_format cuda -y -i "{MEOW}" -c:v hevc_nvenc -acodec aac -cq:v {crf} "{MEOW}.temp{self.ext}"')
+            logger.debug(f'Running FFMPEG compression with args: {args}')
+            p = sp.Popen(args)
+            p.wait()
+            p.communicate()
+            p.terminate()
+            
+            # if failed, compress with CPU
+            if p.returncode > 0:
+                args = shlex.split(f'ffmpeg -hwaccel auto -y -i "{MEOW}" -c:v libx265 -acodec aac -crf {crf} "{MEOW}.temp{self.ext}"')
+                logger.debug(f'Running FFMPEG compression with args: {args}')
+                p = sp.Popen(args)
+                p.wait()
+                p.communicate()
+                p.terminate()
+            
+            shutil.move(f'{MEOW}.temp{self.ext}', MEOW)
+        
         self.progress.emit(
             self.item,
             [

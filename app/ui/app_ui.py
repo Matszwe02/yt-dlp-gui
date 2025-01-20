@@ -252,7 +252,7 @@ class Ui_MainWindow(object):
         self.tb_path.setText(_translate("MainWindow", "..."))
         self.lb_link.setText(_translate("MainWindow", "Link"))
         self.dd_compress.setToolTip(_translate("MainWindow", "Compress videos after downloading using FFMPEG"))
-        self.dd_compress.setItemText(0, _translate("MainWindow", "original"))
+        self.dd_compress.setItemText(0, _translate("MainWindow", "Original"))
         self.dd_compress.setItemText(1, _translate("MainWindow", "Low quality"))
         self.dd_compress.setItemText(2, _translate("MainWindow", "Medium quality"))
         self.dd_compress.setItemText(3, _translate("MainWindow", "High quality"))

@@ -257,8 +257,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             if self.lw_sponsorblock.item(i).checkState() == qtc.Qt.CheckState.Checked:
                 sponsorblock_categories.append(self.lw_sponsorblock.item(i).text())
         
-        print(sponsorblock)
-        print(sponsorblock_categories)
+        compress_level = self.dd_compress.currentText()
 
         self.to_dl[self.index] = Worker(
             item,
@@ -276,6 +275,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.cb_autosubtitles.isChecked(),
             self.cb_subtitlesembed.isChecked(),
             self.cb_mkvremux.isChecked(),
+            compress_level,
         )
 
         logger.info(f"Queue download ({item.id}) added: {self.to_dl[self.index]}")
@@ -482,6 +482,9 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.preset["filename"] = self.le_filename.text()
         if "extra_args" in self.preset:
             self.preset["extra_args"] = self.le_cargs.text()
+        if "compress" in self.preset:
+            self.preset["compress"] = self.dd_compress.currentText()
+
         save_json("config.json", self.config)
 
         qtw.QMessageBox.information(
@@ -620,6 +623,11 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         else:
             self.le_filename.clear()
             self.le_filename.setEnabled(False)
+        
+        if "compress" in preset:
+            self.dd_compress.setCurrentText(preset["compress"])
+        else:
+            self.dd_compress.setCurrentIndex(0)
 
         if "ctrlv" in config:
             self.cb_ctrlv.setEnabled(True)
