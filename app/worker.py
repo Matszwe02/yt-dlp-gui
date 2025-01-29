@@ -103,6 +103,7 @@ class Worker(qtc.QThread):
             "--ignore-errors",
             "--ignore-config",
             "--no-simulate",
+            "--restrict-filenames",
             "--progress",
             "--progress-template",
             "%(progress.status)s %(progress._total_bytes_estimate_str)s "
