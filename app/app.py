@@ -401,7 +401,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         save_json("config.json", self.config)
         event.accept()
 
-    #ctrlv and enter
+
     def eventFilter(self, obj, event):
         if event.type() == qtc.QEvent.KeyPress:
             if event.key() == qtc.Qt.Key_V and event.modifiers() == qtc.Qt.ControlModifier and self.cb_ctrlv.isChecked():
@@ -410,33 +410,12 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             if event.key() == qtc.Qt.Key_Return and self.le_link.hasFocus():
                 self.button_add()
         return super().eventFilter(obj, event)
-    #end ctrlv and enter
-    #onefile
-    def resource_path(self):
-        try:
-            base_path = sys._MEIPASS
-        except AttributeError:
-            base_path = os.path.abspath("./config")
-            if 'app' not in base_path:
-                base_path = os.path.abspath("./app/config")
-        return base_path
-    #End onefile
-    def load_config(self):
-        #onefile
-        if not os.path.isfile("config.json"):
-            shutil.copy(os.path.join(self.resource_path(), "config.json"), "config.json")
-        #end onefile
-        config_path = "config.json"
 
+
+    def load_config(self):
+        
         try:
-            self.config = load_json(config_path)
-        except FileNotFoundError:
-            qtw.QMessageBox.critical(
-                self,
-                "Application Message",
-                f"Config file not found at: {config_path}",
-            )
-            qtw.QApplication.exit()
+            self.config = load_json("config.json")
         except json.decoder.JSONDecodeError:
             qtw.QMessageBox.critical(
                 self,
@@ -450,6 +429,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
         self.dd_format.addItems(self.config["presets"].keys())
         self.dd_format.setCurrentIndex(self.config["format"])
         self.load_preset(self.dd_format.currentText())
+
 
     def save_preset(self):
         if "path" in self.preset:
@@ -492,7 +472,8 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
                 "Application Message",
                 f"Preset for {self.fmt} saved successfully.",
             )
-    
+
+
     def load_preset(self, fmt):
         if not (preset := self.config["presets"].get(fmt)):
             self.le_path.clear()
