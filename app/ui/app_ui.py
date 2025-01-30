@@ -275,7 +275,7 @@ class Ui_MainWindow(object):
         self.cb_thumbnail.setText(_translate("MainWindow", "Thumbnail"))
         self.cb_metadata.setText(_translate("MainWindow", "Metadata"))
         self.le_filename.setPlaceholderText(_translate("MainWindow", "%(title)s.%(ext)s"))
-        self.cb_download_srt.setText(_translate("MainWindow", "Download srt"))
+        self.cb_download_srt.setText(_translate("MainWindow", "Export subtitles"))
         self.lb_cargs.setText(_translate("MainWindow", "Custom Args"))
         self.label.setText(_translate("MainWindow", "SponsorBlock"))
         self.rb_sb_off.setText(_translate("MainWindow", "off"))
