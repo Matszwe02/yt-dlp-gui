@@ -315,16 +315,9 @@
         </widget>
        </item>
        <item row="3" column="4">
-        <widget class="QCheckBox" name="cb_autosubtitles">
+        <widget class="QCheckBox" name="cb_download_srt">
          <property name="text">
-          <string>Auto Subs</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="5">
-        <widget class="QCheckBox" name="cb_subtitlesembed">
-         <property name="text">
-          <string>Embed Subs</string>
+          <string>Export subtitles</string>
          </property>
         </widget>
        </item>

@@ -1,6 +1,4 @@
-"""
-I modded a lot. I believe I added # to all mods.
-"""
+
 import logging, os, sys, shutil, subprocess, version
 import win32event, win32api
 import pywinctl as gw
@@ -187,14 +185,12 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.cb_thumbnail.setEnabled(True)
             self.cb_mkvremux.setEnabled(False)
             self.cb_subtitles.setEnabled(False)
-            self.cb_autosubtitles.setEnabled(False)
-            self.cb_subtitlesembed.setEnabled(False)
+            self.cb_download_srt.setEnabled(False)
         else:
             self.cb_thumbnail.setEnabled(True)
             self.cb_mkvremux.setEnabled(False)
             self.cb_subtitles.setEnabled(False)
-            self.cb_autosubtitles.setEnabled(False)
-            self.cb_subtitlesembed.setEnabled(True)
+            self.cb_download_srt.setEnabled(True)
     def button_open(self):
         path = self.le_path.text()
         paths = os.path.normpath(path)
@@ -272,8 +268,7 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.cb_metadata.isChecked(),
             self.cb_thumbnail.isChecked(),
             self.cb_subtitles.isChecked(),
-            self.cb_autosubtitles.isChecked(),
-            self.cb_subtitlesembed.isChecked(),
+            self.cb_download_srt.isChecked(),
             self.cb_mkvremux.isChecked(),
             compress_level,
         )
@@ -454,10 +449,8 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.preset["thumbnail"] = self.cb_thumbnail.isChecked()
         if "subtitles" in self.preset:
             self.preset["subtitles"] = self.cb_subtitles.isChecked()
-        if "autosubtitles" in self.preset:
-            self.preset["autosubtitles"] = self.cb_autosubtitles.isChecked()    
-        if "embedsubs" in self.preset:
-            self.preset["embedsubs"] = self.cb_subtitlesembed.isChecked()
+        if "download_srt" in self.preset:
+            self.preset["download_srt"] = self.cb_download_srt.isChecked()
         if "filename" in self.preset:
             self.preset["filename"] = self.le_filename.text()
         if "extra_args" in self.preset:
@@ -484,10 +477,8 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.cb_thumbnail.setEnabled(False)
             self.cb_subtitles.setChecked(False)
             self.cb_subtitles.setEnabled(False)
-            self.cb_autosubtitles.setChecked(False)
-            self.cb_autosubtitles.setEnabled(False)
-            self.cb_subtitlesembed.setChecked(False)
-            self.cb_subtitlesembed.setEnabled(False)
+            self.cb_download_srt.setChecked(False)
+            self.cb_download_srt.setEnabled(False)
             self.cb_mkvremux.setChecked(False)
             self.cb_mkvremux.setEnabled(False)
             self.le_cargs.clear()
@@ -566,20 +557,13 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
             self.cb_subtitles.setChecked(False)
             self.cb_subtitles.setEnabled(False)
 
-        if "autosubtitles" in preset:
-            self.cb_autosubtitles.setEnabled(True)
-            self.cb_autosubtitles.setChecked(preset["autosubtitles"])
+        if "download_srt" in preset:
+            self.cb_download_srt.setEnabled(True)
+            self.cb_download_srt.setChecked(preset["download_srt"])
         else:
-            self.cb_autosubtitles.setChecked(False)
-            self.cb_autosubtitles.setEnabled(False)
-
-        if "embedsubs" in preset:
-            self.cb_subtitlesembed.setEnabled(True)
-            self.cb_subtitlesembed.setChecked(preset["embedsubs"])
-        else:
-            self.cb_subtitlesembed.setChecked(False)
-            self.cb_subtitlesembed.setEnabled(False)  
-
+            self.cb_download_srt.setChecked(False)
+            self.cb_download_srt.setEnabled(False)
+        
         if "mp3" in fmt:
             self.cb_mkvremux.setEnabled(False)
             self.cb_mkvremux.setChecked(False)

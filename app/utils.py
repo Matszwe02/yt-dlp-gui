@@ -24,10 +24,9 @@ def save_json(path, data: dict):
 
 EXAMPLE_CONFIG = {
   "format": 0,
-  "onedl": True,
+  "onedl": False,
   "autostart": True,
   "ctrlv": True,
-  "isme": False,
   "mkvremux": False,
   "clipboardmonitor": False,
   "presets": {
@@ -39,13 +38,16 @@ EXAMPLE_CONFIG = {
       ],
       "path": "",
       "sponsorblock": "remove",
+      "sponsorblock_categories": [
+        "Sponsor",
+        "Non-Music"
+      ],
       "metadata": True,
       "subtitles": False,
-      "autosubtitles": True,
+      "download_srt": False,
       "thumbnail": True,
       "extra_args": "",
       "filename": "%(title)s %(upload_date>%Y-%m-%d)s.%(ext)s",
-      "embedsubs": True,
       "markwatch": False
     },
     "1080": {
@@ -62,11 +64,10 @@ EXAMPLE_CONFIG = {
       ],
       "metadata": True,
       "subtitles": False,
-      "autosubtitles": True,
+      "download_srt": False,
       "thumbnail": True,
       "extra_args": "",
       "filename": "%(title)s %(upload_date>%Y-%m-%d)s.%(ext)s",
-      "embedsubs": True,
       "markwatch": False
     },
     "mp4": {
@@ -83,11 +84,10 @@ EXAMPLE_CONFIG = {
       ],
       "metadata": True,
       "subtitles": False,
-      "autosubtitles": True,
+      "download_srt": False,
       "thumbnail": True,
       "extra_args": "",
       "filename": "%(title)s %(upload_date>%Y-%m-%d)s.%(ext)s",
-      "embedsubs": True,
       "markwatch": False
     },
     "mp3": {
@@ -107,13 +107,12 @@ EXAMPLE_CONFIG = {
       ],
       "metadata": True,
       "subtitles": False,
-      "autosubtitles": True,
+      "download_srt": False,
       "thumbnail": True,
       "extra_args": "",
       "filename": "%(title)s %(upload_date>%Y-%m-%d)s.%(ext)s",
-      "embedsubs": True,
       "markwatch": False
     }
   }
     
-    }
+}

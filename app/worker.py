@@ -49,8 +49,7 @@ class Worker(qtc.QThread):
         metadata,
         thumbnail,
         subtitles,
-        autosubtitles,
-        embedsubs,
+        download_srt,
         mkvremux,
         compress_level,
     ):
@@ -67,8 +66,7 @@ class Worker(qtc.QThread):
         self.metadata = metadata
         self.thumbnail = thumbnail
         self.subtitles = subtitles
-        self.autosubtitles = autosubtitles
-        self.embedsubs = embedsubs
+        self.download_srt = download_srt
         self.mkvremux = mkvremux
         self.compress_level = compress_level
         self.mutex = qtc.QMutex()
@@ -79,23 +77,23 @@ class Worker(qtc.QThread):
 
     def __str__(self):
         s = (
-            f"(link={self.link}, "
-            f"args={self.args}, "
-            f"path={self.path}, "
-            f"filename={self.filename}, "
-            f"format={self.fmt}, "
-            f"cargs={self.cargs}, "
-            f"sponsorblock={self.sponsorblock}, "
-            f"sb_categories={','.join(self.sb_categories)}, "
-            f"compress_level={self.compress_level}, "
-            f"metadata={self.metadata}, "
-            f"thumbnail={self.thumbnail}, "
-            f"embedsubs={self.subtitles}, "
-            f"autosubtitles={self.autosubtitles}, "
-            f"embedsubs={self.embedsubs}, "
-            f"subtitles={self.mkvremux})"
+            f"{self.link=}, "
+            f"{self.args=}, "
+            f"{self.path=}, "
+            f"{self.filename=}, "
+            f"{self.fmt=}, "
+            f"{self.cargs=}, "
+            f"{self.sponsorblock=}, "
+            f"{','.join(self.sb_categories)=}, "
+            f"{self.compress_level=}, "
+            f"{self.metadata=}, "
+            f"{self.thumbnail=}, "
+            f"{self.subtitles=}, "
+            f"{self.download_srt=}, "
+            f"{self.mkvremux=})"
         )
         return s
+
     def build_command(self):
         args = [
             "yt-dlp",
@@ -118,20 +116,23 @@ class Worker(qtc.QThread):
                 self.cargs if isinstance(self.cargs, list) else shlex.split(self.cargs)
             )
 
-        if self.autosubtitles:
-            args += ["--write-auto-sub"]
-            args += ["--convert-subs", "srt"]
-        if self.subtitles:
-            args += ["--write-sub"]
-            args += ["--sub-lang", "en"]
         if self.mkvremux:
              args += ["--remux-video", "mkv"]
+        if self.subtitles or self.download_srt:
+            args += ["--write-subs"]
+            args += ["--write-auto-subs"]
+        if self.subtitles:
+            # args += ["--all-subs"]
+            # args += ["--sub-langs", "all"]
+            args += ["--embed-subs"]
+            if not self.download_srt:
+                args += ["--compat-options", "no-keep-subs"]
+        if self.download_srt:
+            args += ["--convert-subs", "srt"]
         if self.metadata:
             args += ["--embed-metadata"]
         if self.thumbnail:
-            args += ["--embed-thumbnail"]
-        if self.embedsubs:
-            args += ["--embed-subs"]
+            args += ["--embed-thumbnail"]  
         if self.sponsorblock:
             categories = "all" if 'all' in self.sb_categories else ",".join(sb_categories.get(cat, 'all') for cat in self.sb_categories)
             if self.sponsorblock == "remove":
