@@ -153,8 +153,9 @@ class MainWindow(qtw.QMainWindow, Ui_MainWindow):
                 self.to_dl.pop(item.id)
                 
             elif worker := self.worker.get(item.id):
-                logger.info(f"Stopping and removing download ({item.id}): {item.text(0)}")
+                logger.info(f"Stopping download ({item.id}): {item.text(0)}")
                 worker.stop()
+                self.worker.pop(item.id, None)
             self.tw.takeTopLevelItem(self.tw.indexOfTopLevelItem(item))
             
         if action == 'restart':
