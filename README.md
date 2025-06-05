@@ -18,7 +18,7 @@
   
 <br>
 
-![image](https://github.com/user-attachments/assets/f9cd3e90-dcaa-4ef8-a5e6-94a76a8d8c29)
+![Screenshot](.github/image.png)
 
 ## Credit
 - project basek on work of [Rootkit-](https://github.com/Rootkit-/yt-dlp-gui)
@@ -36,7 +36,7 @@ videos from various [websites](https://github.com/yt-dlp/yt-dlp/blob/master/supp
 It is designed to be more user-friendly and accessible for those who are not comfortable using the command line.
 
 ## Screenshot
-![Screenshot](.github/image.png)
+![image](https://github.com/user-attachments/assets/f9cd3e90-dcaa-4ef8-a5e6-94a76a8d8c29)
 
 ## Getting Started
 
